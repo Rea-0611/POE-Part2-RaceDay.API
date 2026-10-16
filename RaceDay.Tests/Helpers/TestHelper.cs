@@ -3,11 +3,10 @@ using Microsoft.Extensions.Configuration;
 using RaceDay.API.Data;
 using RaceDay.API.Models.Entities;
 
-namespace RaceDay.Tests.Helpers;
+namespace RaceDay.Tests.Helpers { 
 
 public static class TestHelper
 {
-    /// <summary>Creates a fresh in-memory database for each test.</summary>
     public static RaceDayDbContext GetInMemoryContext()
     {
         var options = new DbContextOptionsBuilder<RaceDayDbContext>()
@@ -16,7 +15,6 @@ public static class TestHelper
         return new RaceDayDbContext(options);
     }
 
-    /// <summary>Returns a test IConfiguration for JWT.</summary>
     public static IConfiguration GetTestConfig()
     {
         var settings = new Dictionary<string, string?>
@@ -32,7 +30,6 @@ public static class TestHelper
             .Build();
     }
 
-    /// <summary>Seeds Jarred as an Organiser. Returns his UserId.</summary>
     public static async Task<int> SeedJarredAsOrganiser(RaceDayDbContext context)
     {
         var user = new User
@@ -55,7 +52,6 @@ public static class TestHelper
         return user.UserId;
     }
 
-    /// <summary>Seeds Jarred as a Participant. Returns his UserId.</summary>
     public static async Task<int> SeedJarredAsParticipant(RaceDayDbContext context)
     {
         var user = new User
@@ -79,7 +75,6 @@ public static class TestHelper
         return user.UserId;
     }
 
-    /// <summary>Seeds an event + category for enrolment/result tests.</summary>
     public static async Task<(int eventId, int categoryId)> SeedEventAndCategory(
         RaceDayDbContext context, int organiserId)
     {
@@ -108,4 +103,5 @@ public static class TestHelper
 
         return (ev.EventId, category.CategoryId);
     }
+}
 }

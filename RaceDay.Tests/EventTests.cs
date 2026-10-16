@@ -1,50 +1,18 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using RaceDay.API.Data;
 using RaceDay.API.Models.DTOs.Events;
-using RaceDay.API.Models.Entities;
 using RaceDay.API.Services;
+using RaceDay.Tests.Helpers;
 using Xunit;
 
-namespace RaceDay.Tests;
+namespace RaceDay.Tests {
 
 public class EventTests
 {
-    private RaceDayDbContext GetInMemoryContext()
-    {
-        var options = new DbContextOptionsBuilder<RaceDayDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-        return new RaceDayDbContext(options);
-    }
-
-    private async Task<int> SeedOrganiserAsync(RaceDayDbContext context)
-    {
-        var user = new User
-        {
-            Email = "jarred@test.com",
-            PasswordHash = "hash",
-            FullName = "Jarred Smith",
-            Role = "Organiser"
-        };
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
-
-        context.Organisers.Add(new Organiser
-        {
-            OrganiserId = user.UserId,
-            OrganisationName = "Jarred's Club"
-        });
-        await context.SaveChangesAsync();
-
-        return user.UserId;
-    }
-
     [Fact]
     public async Task JarredAsOrganiserCanCreateEvent()
     {
-        var context = GetInMemoryContext();
-        var organiserId = await SeedOrganiserAsync(context);
+        var context = TestHelper.GetInMemoryContext();
+        var jarredId = await TestHelper.SeedJarredAsOrganiser(context);
         var service = new EventService(context);
 
         var dto = new CreateEventDto
@@ -52,78 +20,110 @@ public class EventTests
             EventName = "Jarred's Marathon",
             EventDate = DateTime.UtcNow.AddDays(30),
             Location = "Durban",
+            Description = "Jarred's first event",
             Distance = "42.2km",
             EventType = "Run",
             EventStatus = "Open"
         };
 
-        var result = await service.CreateAsync(dto, organiserId);
+        var result = await service.CreateAsync(dto, jarredId);
 
         result.Should().NotBeNull();
         result.EventName.Should().Be("Jarred's Marathon");
+        result.Distance.Should().Be("42.2km");
         result.EventType.Should().Be("Run");
     }
 
     [Fact]
     public async Task JarredCanViewAllEvents()
     {
-        var context = GetInMemoryContext();
-        var organiserId = await SeedOrganiserAsync(context);
+        var context = TestHelper.GetInMemoryContext();
+        var jarredId = await TestHelper.SeedJarredAsOrganiser(context);
         var service = new EventService(context);
 
         await service.CreateAsync(new CreateEventDto
         {
-            EventName = "Event 1",
+            EventName = "Jarred's Event 1",
             EventDate = DateTime.UtcNow.AddDays(10),
             Location = "Cape Town",
             EventType = "Cycle"
-        }, organiserId);
+        }, jarredId);
 
         var events = await service.GetAllAsync();
 
         events.Should().HaveCount(1);
-        events[0].EventName.Should().Be("Event 1");
+        events[0].EventName.Should().Be("Jarred's Event 1");
     }
 
     [Fact]
-    public async Task JarredCannotUpdateEventHeDidNotCreate()
+    public async Task JarredCanViewEventById()
     {
-        var context = GetInMemoryContext();
-        var jarredId = await SeedOrganiserAsync(context);
-
-        // Seed a second organiser
-        var otherUser = new User
-        {
-            Email = "other@test.com",
-            PasswordHash = "hash",
-            FullName = "Other Organiser",
-            Role = "Organiser"
-        };
-        context.Users.Add(otherUser);
-        await context.SaveChangesAsync();
-        context.Organisers.Add(new Organiser
-        {
-            OrganiserId = otherUser.UserId,
-            OrganisationName = "Other Club"
-        });
-        await context.SaveChangesAsync();
-
+        var context = TestHelper.GetInMemoryContext();
+        var jarredId = await TestHelper.SeedJarredAsOrganiser(context);
         var service = new EventService(context);
-        var ev = await service.CreateAsync(new CreateEventDto
-        {
-            EventName = "Other's Event",
-            EventDate = DateTime.UtcNow.AddDays(5),
-            Location = "Joburg"
-        }, otherUser.UserId);
 
-        // Jarred tries to update Other's event
-        var result = await service.UpdateAsync(ev.EventId, new UpdateEventDto
+        var created = await service.CreateAsync(new CreateEventDto
         {
-            EventName = "Hacked Name",
+            EventName = "Jarred's Race",
             EventDate = DateTime.UtcNow.AddDays(5),
-            Location = "Joburg"
+            Location = "Joburg",
+            EventType = "Run"
         }, jarredId);
 
-        result.Should().BeNull();
+        var result = await service.GetByIdAsync(created.EventId);
+
+        result.Should().NotBeNull();
+        result!.EventName.Should().Be("Jarred's Race");
     }
+
+    [Fact]
+    public async Task JarredCanUpdateHisOwnEvent()
+    {
+        var context = TestHelper.GetInMemoryContext();
+        var jarredId = await TestHelper.SeedJarredAsOrganiser(context);
+        var service = new EventService(context);
+
+        var created = await service.CreateAsync(new CreateEventDto
+        {
+            EventName = "Old Name",
+            EventDate = DateTime.UtcNow.AddDays(10),
+            Location = "Durban",
+            EventType = "Run"
+        }, jarredId);
+
+        var updated = await service.UpdateAsync(created.EventId, new UpdateEventDto
+        {
+            EventName = "New Name",
+            EventDate = DateTime.UtcNow.AddDays(15),
+            Location = "Durban",
+            EventType = "Run"
+        }, jarredId);
+
+        updated.Should().NotBeNull();
+        updated!.EventName.Should().Be("New Name");
+    }
+
+    [Fact]
+    public async Task JarredCanDeleteHisOwnEvent()
+    {
+        var context = TestHelper.GetInMemoryContext();
+        var jarredId = await TestHelper.SeedJarredAsOrganiser(context);
+        var service = new EventService(context);
+
+        var created = await service.CreateAsync(new CreateEventDto
+        {
+            EventName = "To Be Deleted",
+            EventDate = DateTime.UtcNow.AddDays(10),
+            Location = "Durban",
+            EventType = "Run"
+        }, jarredId);
+
+        var success = await service.DeleteAsync(created.EventId, jarredId);
+
+        success.Should().BeTrue();
+        var all = await service.GetAllAsync();
+        all.Should().BeEmpty();
+    }
+}
+
 }

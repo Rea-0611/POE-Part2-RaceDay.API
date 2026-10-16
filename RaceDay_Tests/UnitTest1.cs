@@ -1,4 +1,4 @@
-namespace RaceDay.Tests
+namespace RaceDay_Tests
 {
     public class UnitTest1
     {

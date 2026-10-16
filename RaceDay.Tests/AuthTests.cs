@@ -1,11 +1,11 @@
-﻿using FluentAssertions;
-using RaceDay.API.Models.DTOs.Auth;        
+﻿
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using RaceDay.API.Data;
+using RaceDay.API.Models.DTOs.Auth;
 using RaceDay.API.Services;
 using RaceDay.Tests.Helpers;
-using RaceDay.API.Data;
-using Microsoft.EntityFrameworkCore;              
-using Microsoft.Extensions.Configuration;         
-using RaceDay.API.Data;                           
 using Xunit;
 
 namespace RaceDay.Tests
@@ -13,134 +13,178 @@ namespace RaceDay.Tests
 
     public class AuthTests
     {
-        private RaceDayDbContext GetInMemoryContext()
-        {
-            var options = new DbContextOptionsBuilder<RaceDayDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-            return new RaceDayDbContext(options);
-        }
-
         [Fact]
         public async Task JarredCanRegisterAsOrganiser()
         {
-            // Arrange
-            var context = GetInMemoryContext();
-            var tokenService = new TokenService(GetConfig());
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
             var authService = new AuthService(context, tokenService);
 
             var dto = new RegisterDto
             {
-                Email = "jarred@test.com",
-                Password = "Password123!",
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
                 FullName = "Jarred Smith",
                 Role = "Organiser",
-                OrganisationName = "Jarred's Club"
+                OrganisationName = "Jarred's Running Club"
             };
 
-            // Act
             var result = await authService.RegisterAsync(dto);
 
-            // Assert
             result.Should().NotBeNull();
-            result!.Email.Should().Be("jarred@test.com");
+            result!.Email.Should().Be("jarred@raceday.com");
             result.Role.Should().Be("Organiser");
             result.Token.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
-        public async Task JarredCannotRegisterWithDuplicateEmail()
+        public async Task JarredCanRegisterAsParticipant()
         {
-            // Arrange
-            var context = GetInMemoryContext();
-            var tokenService = new TokenService(GetConfig());
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
             var authService = new AuthService(context, tokenService);
 
             var dto = new RegisterDto
             {
-                Email = "jarred@test.com",
-                Password = "Password123!",
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
+                FullName = "Jarred Smith",
+                Role = "Participant",
+                DateOfBirth = new DateTime(1990, 5, 15),
+                ContactNumber = "0821234567"
+            };
+
+            var result = await authService.RegisterAsync(dto);
+
+            result.Should().NotBeNull();
+            result!.Role.Should().Be("Participant");
+        }
+
+        [Fact]
+        public async Task JarredCannotRegisterWithDuplicateEmail()
+        {
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
+            var authService = new AuthService(context, tokenService);
+
+            var dto = new RegisterDto
+            {
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
                 FullName = "Jarred Smith",
                 Role = "Organiser"
             };
 
             await authService.RegisterAsync(dto);
-
-            // Act
             var secondAttempt = await authService.RegisterAsync(dto);
 
-            // Assert
             secondAttempt.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task JarredCannotRegisterWithInvalidRole()
+        {
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
+            var authService = new AuthService(context, tokenService);
+
+            var dto = new RegisterDto
+            {
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
+                FullName = "Jarred Smith",
+                Role = "Admin"
+            };
+
+            var result = await authService.RegisterAsync(dto);
+
+            result.Should().BeNull();
         }
 
         [Fact]
         public async Task JarredCanLoginWithCorrectCredentials()
         {
-            // Arrange
-            var context = GetInMemoryContext();
-            var tokenService = new TokenService(GetConfig());
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
             var authService = new AuthService(context, tokenService);
 
             await authService.RegisterAsync(new RegisterDto
             {
-                Email = "jarred@test.com",
-                Password = "Password123!",
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
                 FullName = "Jarred Smith",
                 Role = "Organiser"
             });
 
-            // Act
             var result = await authService.LoginAsync(new LoginDto
             {
-                Email = "jarred@test.com",
-                Password = "Password123!"
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!"
             });
 
-            // Assert
             result.Should().NotBeNull();
-            result!.Email.Should().Be("jarred@test.com");
+            result!.Email.Should().Be("jarred@raceday.com");
         }
 
         [Fact]
         public async Task JarredCannotLoginWithWrongPassword()
         {
-            // Arrange
-            var context = GetInMemoryContext();
-            var tokenService = new TokenService(GetConfig());
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
             var authService = new AuthService(context, tokenService);
 
             await authService.RegisterAsync(new RegisterDto
             {
-                Email = "jarred@test.com",
-                Password = "Password123!",
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
                 FullName = "Jarred Smith",
                 Role = "Organiser"
             });
 
-            // Act
             var result = await authService.LoginAsync(new LoginDto
             {
-                Email = "jarred@test.com",
+                Email = "jarred@raceday.com",
                 Password = "WrongPassword!"
             });
 
-            // Assert
             result.Should().BeNull();
         }
 
-        private static IConfiguration GetConfig()
+        [Fact]
+        public async Task JarredCannotLoginWithUnknownEmail()
         {
-            var inMemorySettings = new Dictionary<string, string?>
-        {
-            { "Jwt:Key", "TestKeyForJWTSigningThatIsAtLeast32CharactersLong!" },
-            { "Jwt:Issuer", "RaceDayTest" },
-            { "Jwt:Audience", "RaceDayTestClient" },
-            { "Jwt:ExpiryMinutes", "60" }
-        };
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
+            var authService = new AuthService(context, tokenService);
 
-            return new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
+            var result = await authService.LoginAsync(new LoginDto
+            {
+                Email = "unknown@raceday.com",
+                Password = "Password123!"
+            });
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task JarredPasswordIsHashed()
+        {
+            var context = TestHelper.GetInMemoryContext();
+            var tokenService = new TokenService(TestHelper.GetTestConfig());
+            var authService = new AuthService(context, tokenService);
+
+            await authService.RegisterAsync(new RegisterDto
+            {
+                Email = "jarred@raceday.com",
+                Password = "Jarred123!",
+                FullName = "Jarred Smith",
+                Role = "Organiser"
+            });
+
+            var storedUser = context.Users.First();
+
+            storedUser.PasswordHash.Should().NotBe("Jarred123!");
+            storedUser.PasswordHash.Should().StartWith("$2");
         }
     }
 
