@@ -24,8 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Models\DTOs\Auth\" />
-    <Folder Include="Models\DTOs\Events\" />
     <Folder Include="Models\DTOs\Categories\" />
     <Folder Include="Models\DTOs\Enrolments\" />
     <Folder Include="Models\DTOs\Results\" />
