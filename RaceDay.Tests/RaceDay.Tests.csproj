@@ -39,4 +39,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RaceDay.API\RaceDay.API.csproj" />
+  </ItemGroup>
+
 </Project>

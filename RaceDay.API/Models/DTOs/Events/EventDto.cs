@@ -1,4 +1,8 @@
-﻿namespace RaceDay.API.Models.DTOs.Events
+﻿using System;
+using System.Collections.Generic;
+using RaceDay.API.Models.DTOs.Categories;
+
+namespace RaceDay.API.Models.DTOs.Events
 {//start of namespace
     public class EventDto
     {//start of class

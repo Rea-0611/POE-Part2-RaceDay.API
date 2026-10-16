@@ -1,4 +1,7 @@
-﻿namespace RaceDay.API.Models.DTOs.Categories
+﻿using RaceDay.API.Models.DTOs.Categories;
+
+namespace RaceDay.API.Models.DTOs.Categories
+
 {//start of namespace
     public class CategoryDto
     {//start of class
