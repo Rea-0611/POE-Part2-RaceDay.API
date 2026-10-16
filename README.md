@@ -129,7 +129,7 @@ Prerequisites
 Steps
 1.	Clone the Repository
 bash
-git clone https://github.com/Rea-0611/RaceDay-Prog-2B-POE.git
+git clone https:https://github.com/Rea-0611/POE-Part2-RaceDay.API.git
 cd RaceDay-Prog-2B-POE
 2.	Review Planning Documents
 o	Open docs/RaceDay_ERD.png to understand the database structure
@@ -409,7 +409,7 @@ Git
 
 Step 1: Clone the Repository
 bash
-git clone https://github.com/Rea-0611/RaceDay-Prog-2B-POE.git
+git clone https://github.com/Rea-0611/POE-Part2-RaceDay.API.git
 cd RaceDay-Prog-2B-POE
 Step 2: Create the Database
 Open SQL Server Management Studio
@@ -599,7 +599,7 @@ draw.io. 2026. Flowchart Maker and Online Diagram Software. [Online]. Available 
 Microsoft. 2024. ASP.NET Core Documentation. [Online]. Available at: https://learn.microsoft.com/aspnet/core [Accessed October 2026].
 
 🔗 Important Links
-GitHub Repository: https://github.com/Rea-0611/RaceDay-Prog-2B-POE.git
+GitHub Repository: https://github.com/Rea-0611/POE-Part2-RaceDay.API.git
 
 Part 1 YouTube Video: https:https://youtu.be/qrXjeQV9ZrY
 
