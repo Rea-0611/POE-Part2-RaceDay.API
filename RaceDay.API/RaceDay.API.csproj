@@ -24,13 +24,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Data\" />
     <Folder Include="Models\DTOs\Auth\" />
     <Folder Include="Models\DTOs\Events\" />
     <Folder Include="Models\DTOs\Categories\" />
     <Folder Include="Models\DTOs\Enrolments\" />
     <Folder Include="Models\DTOs\Results\" />
-    <Folder Include="Models\Entities\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
