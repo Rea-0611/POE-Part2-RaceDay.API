@@ -2,13 +2,14 @@
 using RaceDay.API.Models.DTOs.Auth;
 using RaceDay.API.Services;
 
-namespace RaceDay.API.Controllers;
+namespace RaceDay.API.Controllers
+{//start of namespace
 
-[ApiController]
+    [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
-{
-    private readonly IAuthService _authService;
+    {//start of class
+        private readonly IAuthService _authService;
 
     public AuthController(IAuthService authService)
     {
@@ -36,4 +37,6 @@ public class AuthController : ControllerBase
 
         return Ok(result);
     }
-}
+}//end of class
+
+}//end of namespace
