@@ -540,7 +540,7 @@ Watch Part 1 Walkthrough:
 https://youtu.be/qrXjeQV9ZrY
 
 Watch Part 2 Walkthrough:
-
+https://youtu.be/2ehFFlNtqjs
 
 The Part 2 video covers:
 
@@ -601,7 +601,7 @@ Microsoft. 2024. ASP.NET Core Documentation. [Online]. Available at: https://lea
 🔗 Important Links
 GitHub Repository: https://github.com/Rea-0611/POE-Part2-RaceDay.API.git
 
-Part 1 YouTube Video: https:https://youtu.be/qrXjeQV9ZrY
+Part 1 YouTube Video: https://youtu.be/qrXjeQV9ZrY
 
-Part 2 YouTube Video: [Replace with your unlisted Part 2 video link]
+Part 2 YouTube Video: https://youtu.be/2ehFFlNtqjs
 
