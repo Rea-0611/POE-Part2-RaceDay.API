@@ -53,5 +53,34 @@ namespace RaceDay.Web.Controllers {
             }
             return View(results);
         }
+        // 1. Show profile
+        public async Task<IActionResult> Profile()
+        {
+            if (HttpContext.Session.GetString("UserRole") != "Participant") return RedirectToAction("Login", "Auth");
+
+            var client = GetApiClient();
+            var response = await client.GetAsync("/api/users/profile");
+            if (!response.IsSuccessStatusCode) return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var profile = JsonDocument.Parse(json).RootElement;
+            return View(profile);
+        }
+
+        // 2. Update profile
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(string fullName, string contactNumber)
+        {
+            var client = GetApiClient();
+            var json = JsonSerializer.Serialize(new { fullName, contactNumber });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            await client.PutAsync("/api/users/profile", content);
+
+            // Update session name so navbar updates immediately
+            HttpContext.Session.SetString("UserName", fullName);
+
+            return RedirectToAction("Profile");
+        }
     }
 }
