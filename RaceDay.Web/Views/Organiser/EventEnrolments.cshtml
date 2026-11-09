@@ -1,0 +1,44 @@
+﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "Event Enrolments";
+}
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h2>Manage Enrolments</h2>
+    <a asp-action="Dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No one has enrolled in this event yet.</div>
+}
+else
+{
+    <table class="table table-bordered shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Participant Name</th>
+                <th>Category</th>
+                <th>Payment Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.GetProperty("participantName").GetString()</td>
+                    <td>@item.GetProperty("categoryName").GetString()</td>
+                    <td>
+                        <span class="badge @(item.GetProperty("paymentStatus").GetString() == "Paid" ? "bg-success" : "bg-warning text-dark")">
+                            @item.GetProperty("paymentStatus").GetString()
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-action="CaptureResult" asp-route-enrolmentId="@item.GetProperty("enrolmentId").GetInt32()" class="btn btn-sm btn-primary">Capture Result</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
