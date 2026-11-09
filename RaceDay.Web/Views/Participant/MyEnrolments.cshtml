@@ -1,0 +1,35 @@
+﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+
+<h2 class="mt-4 mb-3">My Enrolments</h2>
+<table class="table table-bordered shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Event</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="text-center">You haven't enrolled in any events yet.</td></tr>
+        }
+        @foreach (var en in Model)
+        {
+            <tr>
+                <td>@en.GetProperty("eventName").GetString()</td>
+                <td>@en.GetProperty("categoryName").GetString()</td>
+                <td>@en.GetProperty("enrolmentDate").GetDateTime().ToShortDateString()</td>
+                <td>
+                    <span class="badge @(en.GetProperty("paymentStatus").GetString() == "Paid" ? "bg-success" : "bg-warning text-dark")">
+                        @en.GetProperty("paymentStatus").GetString()
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
