@@ -1,12 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// 1. Add HttpClient for calling the API
 builder.Services.AddHttpClient();
 
-// 2. Add Session for managing the JWT Token
+// 1. Add Session
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
@@ -16,7 +13,6 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -26,10 +22,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
-
-// 3. Enable Session (MUST be before UseAuthorization)
+// 2. Use Session (MUST be before Routing)
 app.UseSession();
+app.UseRouting();
 
 app.UseAuthorization();
 

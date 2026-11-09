@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RaceDay.Web.Controllers
 {
@@ -27,16 +26,13 @@ namespace RaceDay.Web.Controllers
                 var responseString = await response.Content.ReadAsStringAsync();
                 var data = JsonDocument.Parse(responseString).RootElement;
 
-                // Store token and role in Session
+                // Save to session
                 HttpContext.Session.SetString("JwtToken", data.GetProperty("token").GetString()!);
                 HttpContext.Session.SetString("UserRole", data.GetProperty("role").GetString()!);
                 HttpContext.Session.SetString("UserName", data.GetProperty("fullName").GetString()!);
 
-                // Redirect based on role
-                if (data.GetProperty("role").GetString() == "Organiser")
-                    return RedirectToAction("Dashboard", "Organiser");
-                else
-                    return RedirectToAction("Index", "Home");
+                // Force a hard redirect to the home page to ensure Session cookie is set
+                return Redirect("/");
             }
 
             ViewBag.Error = "Invalid email or password.";
@@ -51,17 +47,7 @@ namespace RaceDay.Web.Controllers
         {
             var client = GetApiClient();
 
-            var payload = new
-            {
-                email,
-                password,
-                fullName,
-                role,
-                organisationName,
-                contactNumber,
-                dateOfBirth
-            };
-
+            var payload = new { email, password, fullName, role, organisationName, contactNumber, dateOfBirth };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -69,15 +55,19 @@ namespace RaceDay.Web.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                // Registration successful! Send them to the Login page.
                 return RedirectToAction("Login");
             }
 
-            // If it fails, read the error
             var errorDetails = await response.Content.ReadAsStringAsync();
             ViewBag.Error = $"Error {(int)response.StatusCode}: {errorDetails}";
 
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
