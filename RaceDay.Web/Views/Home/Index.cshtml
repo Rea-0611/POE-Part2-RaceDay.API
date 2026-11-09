@@ -1,11 +1,14 @@
 ﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "Home";
+}
 
-<div class="text-center mt-5 mb-4">
+<div class="text-center mt-5 mb-5">
     <h1 class="display-4 fw-bold text-success">Welcome to RaceDay</h1>
     <p class="lead">Find your next running, walking, or cycling event.</p>
 </div>
 
-<h3 class="mb-3">Upcoming Events</h3>
+<h3 class="mb-4">Upcoming Events</h3>
 
 @if (!Model.Any())
 {
