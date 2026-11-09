@@ -591,7 +591,15 @@ Version: 2.0 — Part 1 (Revised) + Part 2 (API Development)
 Date: October 2026
 Course: PROG6212 - Programming 2B
 
+
+
+
+
 RaceDay - Event Management System
+
+⚠️ IMPORTANT FOR MARKING: Before running the MVC app, check the RaceDay.API port in your Visual Studio. If it is not 7268, go to RaceDay.Web/Controllers/BaseController.cs and update the _apiBaseUrl to match your API's port.
+
+
 📋 Project Overview
 RaceDay is a comprehensive, full-stack web-based event management platform designed specifically for the South African road running, walking, and cycling community. The system streamlines the entire event lifecycle, replacing outdated paper-based registrations with a modern, integrated digital solution.
 
