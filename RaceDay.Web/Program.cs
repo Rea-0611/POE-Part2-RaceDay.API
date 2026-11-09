@@ -32,4 +32,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Allow Docker to route traffic to port 8080
+app.Urls.Add("http://*:8080");
+
 app.Run();
