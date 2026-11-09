@@ -1,32 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
-using RaceDay.Web.Models;
-using System.Diagnostics;
+using System.Text.Json;
 
-namespace RaceDay.Web.Controllers
+namespace RaceDay.Web.Controllers;
+
+public class HomeController : BaseController
 {
-    public class HomeController : Controller
+    public HomeController(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+
+    public async Task<IActionResult> Index()
     {
-        private readonly ILogger<HomeController> _logger;
+        var client = GetApiClient();
+        var response = await client.GetAsync("events");
+        var events = new List<JsonElement>();
 
-        public HomeController(ILogger<HomeController> logger)
+        if (response.IsSuccessStatusCode)
         {
-            _logger = logger;
+            var json = await response.Content.ReadAsStringAsync();
+            var data = JsonDocument.Parse(json).RootElement;
+            events = data.EnumerateArray().ToList();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View(events);
+    }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+    public async Task<IActionResult> EventDetails(int id)
+    {
+        var client = GetApiClient();
+        var response = await client.GetAsync($"events/{id}");
+        if (!response.IsSuccessStatusCode) return NotFound();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        var json = await response.Content.ReadAsStringAsync();
+        var ev = JsonDocument.Parse(json).RootElement;
+        return View(ev);
     }
 }

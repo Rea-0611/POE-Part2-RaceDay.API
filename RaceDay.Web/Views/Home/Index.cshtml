@@ -1,8 +1,34 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<System.Text.Json.JsonElement>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-5 mb-4">
+    <h1 class="display-4 fw-bold text-success">Welcome to RaceDay</h1>
+    <p class="lead">Find your next running, walking, or cycling event.</p>
 </div>
+
+<h3 class="mb-3">Upcoming Events</h3>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No events found. Organisers haven't created any yet!</div>
+}
+else
+{
+    <div class="row">
+        @foreach (var ev in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark fw-bold">@ev.GetProperty("eventName").GetString()</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@ev.GetProperty("eventDate").GetDateTime().ToString("dd MMM yyyy")</h6>
+                        <p class="card-text">
+                            📍 @ev.GetProperty("location").GetString() <br />
+                            🏃 @ev.GetProperty("distance").GetString() (@ev.GetProperty("eventType").GetString())
+                        </p>
+                        <a asp-action="EventDetails" asp-route-id="@ev.GetProperty("eventId").GetInt32()" class="btn btn-outline-success w-100">View Details & Enrol</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
