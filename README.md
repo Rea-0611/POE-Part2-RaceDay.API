@@ -736,7 +736,7 @@ Database Changes: During the development of Part 2 and Part 3, additional fields
 Authentication: Part 2 utilises JWT tokens. Because the MVC frontend needs to maintain state across page loads, the JWT token and user role are stored securely in an ASP.NET Core Session, which acts as the session management layer for the MVC application.
 
 🔗 Repository Link
-GitHub Repository: [Insert your GitHub link here]
+GitHub Repository: (https://github.com/Rea-0611/POE-Part2-RaceDay.API.git)
 
 👨‍💻 Author
 Name: Pontsho Sedumedi
