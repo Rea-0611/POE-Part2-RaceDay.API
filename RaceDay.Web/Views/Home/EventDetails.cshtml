@@ -1,0 +1,52 @@
+﻿@model System.Text.Json.JsonElement
+@{
+    ViewData["Title"] = "Event Details";
+    var eventId = Model.GetProperty("eventId").GetInt32();
+}
+
+<div class="card shadow mt-4">
+    <div class="card-body">
+        <h2 class="card-title text-success">@Model.GetProperty("eventName").GetString()</h2>
+        <h6 class="text-muted mb-4">@Model.GetProperty("eventDate").GetDateTime().ToString("f")</h6>
+
+        <p><strong>Location:</strong> @Model.GetProperty("location").GetString()</p>
+        <p><strong>Distance & Type:</strong> @Model.GetProperty("distance").GetString() (@Model.GetProperty("eventType").GetString())</p>
+        <p>@Model.GetProperty("description").GetString()</p>
+    </div>
+</div>
+
+<h4 class="mt-5 mb-3">Available Categories</h4>
+<table class="table table-hover shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Category Name</th>
+            <th>Type</th>
+            <th>Entry Fee</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cat in Model.GetProperty("categories").EnumerateArray())
+        {
+            <tr>
+                <td>@cat.GetProperty("categoryName").GetString()</td>
+                <td>@cat.GetProperty("categoryType").GetString()</td>
+                <td>R @cat.GetProperty("entryFee").GetDecimal()</td>
+                <td>
+                    @if (Context.Session.GetString("UserRole") == "Participant")
+                    {
+                        <form asp-controller="Participant" asp-action="Enrol" method="post">
+                            <input type="hidden" name="eventId" value="@eventId" />
+                            <input type="hidden" name="categoryId" value="@cat.GetProperty("categoryId").GetInt32()" />
+                            <button type="submit" class="btn btn-sm btn-success">Enrol Now</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Login as participant to enrol</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
