@@ -1,0 +1,31 @@
+﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h2 class="mt-4 mb-3">My Race History</h2>
+<table class="table table-striped shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Event</th>
+            <th>Category</th>
+            <th>Finish Time</th>
+            <th>Overall Position</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="text-center">No results recorded yet.</td></tr>
+        }
+        @foreach (var res in Model)
+        {
+            <tr>
+                <td>@res.GetProperty("eventName").GetString()</td>
+                <td>@res.GetProperty("categoryName").GetString()</td>
+                <td>@res.GetProperty("finishTime").GetString()</td>
+                <td>@res.GetProperty("overallPosition").GetInt32()</td>
+            </tr>
+        }
+    </tbody>
+</table>
