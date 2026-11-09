@@ -10,68 +10,49 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
             <div class="container">
-                <a class="navbar-brand fw-bold text-success" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     🏃‍♂️ RaceDay
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-
-                    <!-- Left Side of Navbar -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
-                        <!-- Organiser Links -->
                         @if (Context.Session.GetString("UserRole") == "Organiser")
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Organiser" asp-action="Dashboard">Dashboard</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Dashboard">Organiser Dashboard</a></li>
                         }
 
-                       
-                            <!-- Participant Links -->
-                            @if (Context.Session.GetString("UserRole") == "Participant")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-controller="Participant" asp-action="MyEnrolments">My Enrolments</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-controller="Participant" asp-action="MyResults">My Results</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-controller="Participant" asp-action="Profile">Profile</a>
-                                </li>
-                            }
-                        
+                        @if (Context.Session.GetString("UserRole") == "Participant")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyEnrolments">My Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyResults">My Results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Profile">Profile</a></li>
+                        }
                     </ul>
-
-                    <!-- Right Side of Navbar (Auth) -->
                     <ul class="navbar-nav">
                         @if (Context.Session.GetString("JwtToken") != null)
                         {
-                            <!-- Logged In View -->
-                            <li class="nav-item">
-                                <span class="nav-link text-white fw-bold">Hello, @Context.Session.GetString("UserName")!</span>
+                            <li class="nav-item d-flex align-items-center me-3">
+                                <span class="text-lime fw-bold">👤 @Context.Session.GetString("UserName")</span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-danger fw-bold" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                <a class="btn btn-outline-light btn-sm mt-1" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
                         {
-                            <!-- Guest View -->
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Auth" asp-action="Login">Login</a>
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Auth" asp-action="Register">Register</a>
+                                <a class="btn btn-success btn-sm mt-1" asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                         }
                     </ul>

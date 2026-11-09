@@ -3,32 +3,68 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center mt-5 mb-5">
-    <h1 class="display-4 fw-bold text-success">Welcome to RaceDay</h1>
-    <p class="lead">Find your next running, walking, or cycling event.</p>
+<!-- Hero Section -->
+<div class="p-5 mb-5 rounded-3 text-white" style="background: linear-gradient(135deg, #1A2238 0%, #2A3654 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    <div class="container-fluid py-5">
+        <h1 class="display-4 fw-bold text-lime mb-3">Find Your Next Challenge</h1>
+        <p class="col-md-8 fs-4 text-light">Join the RaceDay community. Browse upcoming running, walking, and cycling events across South Africa.</p>
+        @if (Context.Session.GetString("JwtToken") == null)
+        {
+            <a class="btn btn-success btn-lg px-4 mt-3" asp-controller="Auth" asp-action="Register">Get Started</a>
+        }
+        else if (Context.Session.GetString("UserRole") == "Organiser")
+        {
+            <a class="btn btn-success btn-lg px-4 mt-3" asp-controller="Organiser" asp-action="CreateEvent">Create an Event</a>
+        }
+    </div>
 </div>
 
-<h3 class="mb-4">Upcoming Events</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Upcoming Events</h2>
+    <!-- Filter buttons could go here -->
+</div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">No events found. Organisers haven't created any yet!</div>
+    <div class="alert alert-info border-0 shadow-sm p-4 text-center">
+        <h5 class="mb-1">No events found</h5>
+        <p class="text-muted mb-0">Check back later or ask an Organiser to create one!</p>
+    </div>
 }
 else
 {
     <div class="row">
         @foreach (var ev in Model)
         {
+            var eventId = ev.GetProperty("eventId").GetInt32();
             <div class="col-md-4 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-dark fw-bold">@ev.GetProperty("eventName").GetString()</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@ev.GetProperty("eventDate").GetDateTime().ToString("dd MMM yyyy")</h6>
-                        <p class="card-text">
-                            📍 @ev.GetProperty("location").GetString() <br />
-                            🏃 @ev.GetProperty("distance").GetString() (@ev.GetProperty("eventType").GetString())
+                <div class="card h-100">
+                    <!-- Image Section -->
+                    @if (ev.TryGetProperty("imageUrl", out var img) && img.ValueKind != System.Text.Json.JsonValueKind.Null)
+                    {
+                        <img src="@img.GetString()" class="card-img-top event-card-img" alt="Event Banner">
+                    }
+                    else
+                    {
+                        <!-- Fallback placeholder image if no banner is uploaded -->
+                        <img src="https://images.unsplash.com/photo-1552674605-15cbf2ec4b23?auto=format&fit=crop&q=80&w=600" class="card-img-top event-card-img" alt="Default Event Image">
+                    }
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold mb-0">@ev.GetProperty("eventName").GetString()</h5>
+                            <span class="badge bg-success ms-2">@ev.GetProperty("eventType").GetString()</span>
+                        </div>
+
+                        <p class="text-muted mb-3">
+                            <i class="bi bi-calendar-event"></i> @ev.GetProperty("eventDate").GetDateTime().ToString("dd MMM yyyy") <br />
+                            <i class="bi bi-geo-alt"></i> @ev.GetProperty("location").GetString() <br />
+                            <i class="bi bi-speedometer2"></i> @ev.GetProperty("distance").GetString()
                         </p>
-                        <a asp-action="EventDetails" asp-route-id="@ev.GetProperty("eventId").GetInt32()" class="btn btn-outline-success w-100">View Details & Enrol</a>
+
+                        <div class="mt-auto">
+                            <a asp-action="EventDetails" asp-route-id="@eventId" class="btn btn-outline-success w-100 fw-bold">View Details & Enrol</a>
+                        </div>
                     </div>
                 </div>
             </div>

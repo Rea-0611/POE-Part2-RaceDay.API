@@ -1,22 +1,178 @@
-html {
-  font-size: 14px;
-}
+/* =========================================
+   RACEDAY GLOBAL THEME
+   ========================================= */
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --race-navy: #1A2238; /* Deep modern navy */
+    --race-lime: #00E676; /* Energetic lime green */
+    --race-lime-hover: #00C853;
+    --race-light-bg: #F4F7F6; /* Off-white background */
+    --race-text: #333333;
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: var(--race-light-bg);
+    color: var(--race-text);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5 {
+    color: var(--race-navy);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.text-lime {
+    color: var(--race-lime) !important;
+}
+
+/* =========================================
+   NAVBAR
+   ========================================= */
+.navbar {
+    background-color: var(--race-navy) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--race-lime) !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #E0E0E0 !important;
+    transition: color 0.3s ease;
+}
+
+    .nav-link:hover, .nav-link.active {
+        color: var(--race-lime) !important;
+    }
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+.btn-success {
+    background-color: var(--race-lime);
+    border-color: var(--race-lime);
+    color: var(--race-navy);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .btn-success:hover {
+        background-color: var(--race-lime-hover);
+        border-color: var(--race-lime-hover);
+        color: var(--race-navy);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 230, 118, 0.3);
+    }
+
+.btn-primary {
+    background-color: var(--race-navy);
+    border-color: var(--race-navy);
+}
+
+    .btn-primary:hover {
+        background-color: #2A3654;
+        border-color: #2A3654;
+    }
+
+/* =========================================
+   CARDS & CONTAINERS
+   ========================================= */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+}
+
+/* Event Card Specific */
+.event-card-img {
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 3px solid var(--race-lime);
+}
+
+/* =========================================
+   TABLES
+   ========================================= */
+.table {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+    .table thead {
+        background-color: var(--race-navy);
+        color: #ffffff;
+    }
+
+    .table th {
+        font-weight: 600;
+        border: none;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+/* Badges */
+.badge {
+    padding: 0.5em 0.8em;
+    font-size: 0.85em;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+    .badge.bg-success {
+        background-color: var(--race-lime) !important;
+        color: var(--race-navy) !important;
+    }
+
+    .badge.bg-warning {
+        background-color: #FFB300 !important; /* Amber for Pending */
+        color: #333 !important;
+    }
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--race-lime);
+        box-shadow: 0 0 0 0.25rem rgba(0, 230, 118, 0.25);
+    }
+
+/* Footer */
+footer {
+    background-color: #ffffff;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+    margin-top: auto; /* Pushes footer to bottom */
 }
