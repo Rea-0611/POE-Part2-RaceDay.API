@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace RaceDay.Web.Controllers;
+namespace RaceDay.Web.Controllers { 
 
 public class HomeController : BaseController
 {
@@ -10,27 +10,25 @@ public class HomeController : BaseController
     public async Task<IActionResult> Index()
     {
         var client = GetApiClient();
-        var response = await client.GetAsync("events");
+        var response = await client.GetAsync("/api/events");
         var events = new List<JsonElement>();
 
         if (response.IsSuccessStatusCode)
         {
             var json = await response.Content.ReadAsStringAsync();
-            var data = JsonDocument.Parse(json).RootElement;
-            events = data.EnumerateArray().ToList();
+            events = JsonDocument.Parse(json).RootElement.EnumerateArray().ToList();
         }
-
         return View(events);
     }
 
     public async Task<IActionResult> EventDetails(int id)
     {
         var client = GetApiClient();
-        var response = await client.GetAsync($"events/{id}");
+        var response = await client.GetAsync($"/api/events/{id}");
         if (!response.IsSuccessStatusCode) return NotFound();
 
         var json = await response.Content.ReadAsStringAsync();
         var ev = JsonDocument.Parse(json).RootElement;
         return View(ev);
     }
-}
+}}
