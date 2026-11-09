@@ -1,4 +1,10 @@
+using Microsoft.AspNetCore.DataProtection;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add this to fix the Docker DataProtection warning
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"/app/keys"));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();

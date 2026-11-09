@@ -7,7 +7,7 @@ namespace RaceDay.Web.Controllers
     public class BaseController : Controller
     {
         protected readonly IHttpClientFactory _httpClientFactory;
-        protected readonly string _apiBaseUrl = "https://localhost:7268/api";
+        protected readonly string _apiBaseUrl = "https://host.docker.internal:7268/api";
         public BaseController(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;

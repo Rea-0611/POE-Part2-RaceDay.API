@@ -4,6 +4,9 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Create the keys folder for Data Protection
+RUN mkdir -p /app/keys && chown -R app:app /app/keys
+
 # 2. Build image (SDK is used to compile the code)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
