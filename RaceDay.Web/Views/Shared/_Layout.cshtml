@@ -35,16 +35,21 @@
                             </li>
                         }
 
-                        <!-- Participant Links -->
-                        @if (Context.Session.GetString("UserRole") == "Participant")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Participant" asp-action="MyEnrolments">My Enrolments</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Participant" asp-action="MyResults">My Results</a>
-                            </li>
-                        }
+                       
+                            <!-- Participant Links -->
+                            @if (Context.Session.GetString("UserRole") == "Participant")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Participant" asp-action="MyEnrolments">My Enrolments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Participant" asp-action="MyResults">My Results</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Participant" asp-action="Profile">Profile</a>
+                                </li>
+                            }
+                        
                     </ul>
 
                     <!-- Right Side of Navbar (Auth) -->
