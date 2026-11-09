@@ -591,6 +591,165 @@ Version: 2.0 — Part 1 (Revised) + Part 2 (API Development)
 Date: October 2026
 Course: PROG6212 - Programming 2B
 
+RaceDay - Event Management System
+📋 Project Overview
+RaceDay is a comprehensive, full-stack web-based event management platform designed specifically for the South African road running, walking, and cycling community. The system streamlines the entire event lifecycle, replacing outdated paper-based registrations with a modern, integrated digital solution.
+
+This repository contains the complete, three-part Portfolio of Evidence (POE) submission for the PROG6212 module.
+
+👥 User Roles
+The system supports two distinct user roles with tailored, role-specific interfaces:
+
+🏢 Organiser
+Event organisers have full control over their events. They can:
+
+Create, edit, and delete events.
+
+Define age or distance categories for each event.
+
+View all participant enrolments for their events.
+
+Update participant payment statuses (e.g., mark as Paid).
+
+Capture and publish finish times and positions for participants.
+
+🏃 Participant
+Race participants can engage with the platform by:
+
+Creating an account and managing their profile.
+
+Browsing all upcoming events with filtering options.
+
+Enrolling in specific event categories.
+
+Viewing their personal enrolment history and payment statuses.
+
+Viewing their personal race results and statistics.
+
+🏗️ System Architecture
+The application is built using a modern, decoupled architecture:
+
+Part 1: Database design (ERD), API endpoint planning, and SQL Server database creation.
+
+Part 2: A RESTful API built with ASP.NET Core Web API (C#) and Entity Framework Core, featuring JWT authentication and unit testing.
+
+Part 3: An ASP.NET Core MVC web application that consumes the API. It includes session management, role-based interfaces, Azure Blob Storage integration for image uploads, and Docker containerisation.
+
+🛠️ Technologies Used
+Backend API: ASP.NET Core 8.0 Web API, Entity Framework Core, SQL Server.
+
+Frontend Web App: ASP.NET Core 8.0 MVC, Razor Views, Bootstrap 5.
+
+Authentication: JWT (JSON Web Tokens) for API, Session Cookies for MVC.
+
+Cloud Storage: Azure Blob Storage (for event banners).
+
+Containerisation: Docker.
+
+Testing: xUnit, FluentAssertions, EF Core InMemory.
+
+CI/CD: GitHub Actions.
+
+🚀 Setup Instructions (Local Development)
+Prerequisites
+Visual Studio 2022 (version 17.8 or later)
+
+.NET 8.0 SDK
+
+SQL Server Management Studio (SSMS)
+
+Docker Desktop (for container testing)
+
+Step 1: Database Setup
+Open SQL Server Management Studio (SSMS).
+
+Locate the RaceDay_Database_Creation.sql script in the docs folder.
+
+Execute the script to create the RaceDay database, tables, and sample data.
+
+Step 2: API Configuration (RaceDay.API)
+Open RaceDay.API/appsettings.json.
+
+Verify the DefaultConnection string points to your local SQL Server instance.
+
+Add your Azure Blob Storage connection string to the AzureBlobStorage key.
+
+Step 3: MVC Configuration (RaceDay.Web)
+Open RaceDay.Web/Controllers/BaseController.cs.
+
+Ensure the _apiBaseUrl variable matches the port your API runs on (e.g., https://localhost:7268/api).
+
+Step 4: Run the Application
+In Visual Studio, right-click the Solution in Solution Explorer and select Properties.
+
+Go to Common Properties > Startup Project.
+
+Select Multiple startup projects.
+
+Set both RaceDay.API and RaceDay.Web to Start.
+
+Press F5 to run both projects simultaneously. Swagger will open for the API, and your browser will open the MVC application.
+
+🐳 Docker Setup
+The MVC web application is fully containerised using Docker. The Dockerfile is located in the RaceDay.Web project directory.
+
+To build and run the application using Docker:
+
+Ensure Docker Desktop is running on your machine.
+
+Open a terminal and navigate to the root directory of the solution (where the .sln file is located).
+
+Build the Docker image:
+
+bash
+docker build -t raceday-web -f RaceDay.Web/Dockerfile .
+Run the Docker container:
+
+bash
+docker run -d -p 8080:8080 --name raceday-container raceday-web
+Open your browser and navigate to http://localhost:8080.
+
+✅ CI/CD Pipeline
+The repository includes a GitHub Actions workflow located at .github/workflows/ci.yml. This pipeline triggers on every push and pull request to the main branch. It performs the following actions:
+
+Sets up the .NET 8.0 environment.
+
+Restores all NuGet dependencies.
+
+Builds the entire solution.
+
+Executes all unit tests (xUnit) to ensure no regressions.
+
+Green Build Status:
+
+https://docs/cicd-green-build.png
+(Ensure you upload your green build screenshot to the docs folder!)
+
+📹 Video Presentation
+An unlisted YouTube video demonstrating the final application is available below. The video covers the MVC structure, session management, Azure Blob Storage integration, and the Docker setup.
+
+Watch the Part 3 Walkthrough Video
+
+📝 Deviations and Notes
+Database Changes: During the development of Part 2 and Part 3, additional fields were required (such as Distance, EventType, and ImageUrl for Events). These were added to the Entity Framework models and migrated to the SQL database. The original ERD in the docs folder reflects the core design, while these additions are documented in the code.
+
+Authentication: Part 2 utilises JWT tokens. Because the MVC frontend needs to maintain state across page loads, the JWT token and user role are stored securely in an ASP.NET Core Session, which acts as the session management layer for the MVC application.
+
+🔗 Repository Link
+GitHub Repository: [Insert your GitHub link here]
+
+👨‍💻 Author
+Name: Pontsho Sedumedi
+
+Student Number: ST10483202
+
+Module: PROG6212 - Programming 2B
+
+Due Date: 9 November 2026
+
+
+
+
 📚 References
 DeepSeek. 2026. DeepSeek-V3. [Generative AI]. Available at: https://deepseek.com [Accessed October 2026].
 
