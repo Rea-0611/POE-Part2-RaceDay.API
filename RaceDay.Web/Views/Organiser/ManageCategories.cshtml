@@ -1,0 +1,61 @@
+﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "Manage Categories";
+    var eventId = ViewBag.EventId;
+}
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h3>Manage Categories</h3>
+    <a asp-action="Dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">Existing Categories</div>
+            <ul class="list-group list-group-flush">
+                @if (!Model.Any())
+                {
+                    <li class="list-group-item text-muted">No categories added yet.</li>
+                }
+                @foreach (var cat in Model)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@cat.GetProperty("categoryName").GetString()</strong>
+                            <span class="badge bg-secondary">@cat.GetProperty("categoryType").GetString()</span>
+                        </div>
+                        <span class="text-success fw-bold">R @cat.GetProperty("entryFee").GetDecimal()</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Add Category</div>
+            <div class="card-body">
+                <form asp-action="AddCategory" method="post">
+                    <input type="hidden" name="eventId" value="@eventId" />
+                    <div class="mb-3">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" name="categoryName" class="form-control" placeholder="e.g. Senior Men, 10km" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category Type</label>
+                        <select name="categoryType" class="form-select" required>
+                            <option value="Distance">Distance</option>
+                            <option value="Age">Age</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Entry Fee (R)</label>
+                        <input type="number" step="0.01" name="entryFee" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
