@@ -1,0 +1,35 @@
+﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "Event Results";
+}
+
+<div class="d-flex justify-content-between mt-4 mb-3">
+    <h3>Official Results</h3>
+    <a asp-action="Dashboard" class="btn btn-outline-secondary">Back</a>
+</div>
+
+<table class="table table-striped shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Pos</th>
+            <th>Participant</th>
+            <th>Category</th>
+            <th>Finish Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="text-center text-muted">No results captured yet.</td></tr>
+        }
+        @foreach (var res in Model.OrderBy(r => r.GetProperty("overallPosition").GetInt32()))
+        {
+            <tr>
+                <td><strong>@res.GetProperty("overallPosition").GetInt32()</strong></td>
+                <td>@res.GetProperty("participantName").GetString()</td>
+                <td>@res.GetProperty("categoryName").GetString()</td>
+                <td>@res.GetProperty("finishTime").GetString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
