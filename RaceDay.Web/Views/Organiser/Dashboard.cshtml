@@ -1,0 +1,42 @@
+﻿@model List<System.Text.Json.JsonElement>
+@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h2>Organiser Dashboard</h2>
+    <a asp-action="CreateEvent" class="btn btn-success">+ Create New Event</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You haven't created any events yet.</div>
+}
+else
+{
+    <table class="table table-bordered shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Event Name</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model)
+            {
+                var eventId = ev.GetProperty("eventId").GetInt32();
+                <tr>
+                    <td>@ev.GetProperty("eventName").GetString()</td>
+                    <td>@ev.GetProperty("eventDate").GetDateTime().ToShortDateString()</td>
+                    <td>@ev.GetProperty("location").GetString()</td>
+                    <td>
+                        <a asp-action="ManageCategories" asp-route-eventId="@eventId" class="btn btn-sm btn-primary">Categories</a>
+                        <a asp-action="EventEnrolments" asp-route-id="@eventId" class="btn btn-sm btn-info">Enrolments</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
