@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RaceDay.Web.Controllers;
 
@@ -18,7 +19,7 @@ public class AuthController : BaseController
         var json = JsonSerializer.Serialize(new { email, password });
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await client.PostAsync("auth/login", content);
+        var response = await client.PostAsync("/api/auth/login", content);
 
         if (response.IsSuccessStatusCode)
         {
@@ -45,26 +46,36 @@ public class AuthController : BaseController
     public IActionResult Register() => View();
 
     [HttpPost]
-    public async Task<IActionResult> Register(string email, string password, string fullName, string role, string? organisationName, string? contactNumber)
+    public async Task<IActionResult> Register(string email, string password, string fullName, string role, string? organisationName, string? contactNumber, DateTime? dateOfBirth)
     {
         var client = GetApiClient();
-        var json = JsonSerializer.Serialize(new { email, password, fullName, role, organisationName, contactNumber });
+
+        var payload = new
+        {
+            email,
+            password,
+            fullName,
+            role,
+            organisationName,
+            contactNumber,
+            dateOfBirth
+        };
+
+        var json = JsonSerializer.Serialize(payload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await client.PostAsync("auth/register", content);
+        var response = await client.PostAsync("/api/auth/register", content);
 
         if (response.IsSuccessStatusCode)
         {
+            // Registration successful! Send them to the Login page.
             return RedirectToAction("Login");
         }
 
-        ViewBag.Error = "Registration failed. Email might be taken.";
-        return View();
-    }
+        // If it fails, read the error
+        var errorDetails = await response.Content.ReadAsStringAsync();
+        ViewBag.Error = $"Error {(int)response.StatusCode}: {errorDetails}";
 
-    public IActionResult Logout()
-    {
-        HttpContext.Session.Clear();
-        return RedirectToAction("Index", "Home");
+        return View();
     }
 }
