@@ -95,16 +95,3 @@ app.MapControllers();
 
 app.Run();
 
-// Add this to Program.cs in RaceDay.Web
-builder.Services.AddHttpClient();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(60);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
-
-// After var app = builder.Build();
-app.UseSession(); // Must be before UseRouting/UseAuthorization
-app.UseAuthentication();
-app.UseAuthorization();
