@@ -6,8 +6,7 @@ namespace RaceDay.Web.Controllers;
 public class BaseController : Controller
 {
     protected readonly IHttpClientFactory _httpClientFactory;
-    protected readonly string _apiBaseUrl = "https://localhost:7268;http://localhost:5019";
-
+    protected readonly string _apiBaseUrl = "https://localhost:7268/api";
     public BaseController(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
