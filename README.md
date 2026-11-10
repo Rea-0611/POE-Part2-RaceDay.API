@@ -746,6 +746,10 @@ Authentication: Part 2 utilises JWT tokens. Because the MVC frontend needs to ma
 🔗 Repository Link
 GitHub Repository: (https://github.com/Rea-0611/POE-Part2-RaceDay.API.git)
 
+YouTube Video links: https://youtu.be/7MzFKzakcDg (for part 1 of the video)
+
+                     https://youtu.be/MYpDa3S85hg (for part 2 of the video)
+
 👨‍💻 Author
 Name: Pontsho Sedumedi
 
