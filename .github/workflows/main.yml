@@ -1,0 +1,75 @@
+name: CI – Build & Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-and-test:
+    name: Build & Test (.NET 8)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout source
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Install .NET 8 SDK
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # 3. Cache NuGet packages (speeds up subsequent runs)
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      # 4. Restore dependencies for all projects
+      - name: Restore dependencies
+        run: dotnet restore RaceDay.API.slnx
+
+      # 5. Build entire solution in Release
+      - name: Build solution
+        run: dotnet build RaceDay.API.slnx --configuration Release --no-restore
+
+      # 6. Run tests with code coverage
+      #    Tests use EF InMemory — no SQL Server or Azure storage needed
+      - name: Run tests
+        run: |
+          dotnet test RaceDay.Tests/RaceDay.Tests.csproj \
+            --configuration Release \
+            --no-build \
+            --verbosity normal \
+            --logger "trx;LogFileName=test-results.trx" \
+            --collect:"XPlat Code Coverage" \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+        env:
+          # Provide dummy JWT settings so the app can start during integration tests
+          Jwt__Key: "CITestSecretKeyForJWTSigningThatIsAtLeast32Chars!"
+          Jwt__Issuer: "RaceDayAPI"
+          Jwt__Audience: "RaceDayClient"
+
+      # 7. Upload test results so they appear in the GitHub UI
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: "**/TestResults/**"
+          retention-days: 7
+
+      # 8. Upload coverage report
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: "**/TestResults/**/coverage.cobertura.xml"
+          retention-days: 7
