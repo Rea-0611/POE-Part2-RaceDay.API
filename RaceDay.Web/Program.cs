@@ -43,7 +43,7 @@ internal class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         // Allow Docker to route traffic to port 8081
-        app.Urls.Add("http://*:8081");
+        // app.Urls.Add("http://*:8081"); // Docker port binding        app.Urls.Add("http://localhost:8081");
 
         app.Run();
     }

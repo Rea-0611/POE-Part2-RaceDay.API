@@ -170,9 +170,3 @@ h1, h2, h3, h4, h5 {
         box-shadow: 0 0 0 0.25rem rgba(0, 230, 118, 0.25);
     }
 
-/* Footer */
-footer {
-    background-color: #ffffff;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
-    margin-top: auto; /* Pushes footer to bottom */
-}
