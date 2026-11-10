@@ -594,7 +594,7 @@ Course: PROG6212 - Programming 2B
 
 
 
-
+Part 3 - PORTFOLIO OF EVIDENCE README FILE
 RaceDay - Event Management System
 
 ⚠️ IMPORTANT FOR MARKING: Before running the MVC app, check the RaceDay.API port in your Visual Studio. If it is not 7268, go to RaceDay.Web/Controllers/BaseController.cs and update the _apiBaseUrl to match your API's port.
@@ -771,4 +771,6 @@ GitHub Repository: https://github.com/Rea-0611/POE-Part2-RaceDay.API.git
 Part 1 YouTube Video: https://youtu.be/qrXjeQV9ZrY
 
 Part 2 YouTube Video: https://youtu.be/2ehFFlNtqjs
+
+Part 3 YouTube Video: 
 
